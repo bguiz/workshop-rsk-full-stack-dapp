@@ -100,6 +100,14 @@ contract('Election', function(accounts) {
   });
 
   it('allows a voter to cast a vote', async () => {
-    // TODO specification code
+    const candidateId = new BN(1);
+    await electionInstance
+      .vote(candidateId, { from: accounts[0] });
+    const voted = await electionInstance.voters(accounts[0]);
+    const candidate = await electionInstance.candidates(candidateId);
+    assert(voted, 'the voter was marked as voted');
+    assert.strictEqual(
+      candidate.voteCount.toString(), '1',
+      'increments the candidate\'s vote count');
   });
 });
