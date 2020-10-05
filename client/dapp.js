@@ -155,6 +155,22 @@ const DApp = {
   },
 
   onVoteSubmitClick: async function(ev) {
-    // TODO implementation code
+    ev.preventDefault();
+
+    const electionInstance = DApp.contracts.Election;
+    const candidateId =
+      document.querySelector('#candidatesSelect').value;
+    try {
+      const loader = document.querySelector('#loader');
+      const content = document.querySelector('#content');
+      utils.elShow(loader);
+      utils.elHide(content);
+      await electionInstance.methods
+        .vote(candidateId).send({ from: DApp.accounts[0] });
+    } catch (ex) {
+      console.error(ex);
+    }
+
+    return DApp.renderVotes();
   },
 };
