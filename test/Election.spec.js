@@ -12,7 +12,9 @@ contract('Election', function(accounts) {
   });
 
   it('initializes with two candidates', async () => {
-    // TODO specification code
+    const count = await electionInstance.candidatesCount();
+    assert.strictEqual(
+      count.toString(), '2');
   });
 
   it('it initializes the candidates with the correct values', async () => {
