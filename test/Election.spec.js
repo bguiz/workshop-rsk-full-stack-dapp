@@ -61,7 +61,42 @@ contract('Election', function(accounts) {
   });
 
   it('disallows double voting', async () => {
-    // TODO specification code
+    const candidateId = 2;
+    let err;
+    let candidate1;
+    let candidate2;
+
+    try {
+      await electionInstance.vote(candidateId, { from: accounts[2] });
+    } catch (ex) {
+      err = ex;
+    }
+    assert(!err, 'expected transaction not to revert');
+    candidate1 = await electionInstance.candidates(1);
+    candidate2 = await electionInstance.candidates(2);
+    assert.strictEqual(
+      candidate1.voteCount.toString(), '0',
+      'candidate 1 did not receive any votes');
+    assert.strictEqual(
+      candidate2.voteCount.toString(), '1',
+      'candidate 2 did receive a vote');
+
+    try {
+      await electionInstance.vote(candidateId, { from: accounts[2] });
+    } catch (ex) {
+      err = ex;
+    }
+    assert(err, 'expected transaction to revert');
+    assert(err.message.indexOf('revert') >= 0,
+      'error message must contain revert');
+    candidate1 = await electionInstance.candidates(1);
+    candidate2 = await electionInstance.candidates(2);
+    assert.strictEqual(
+      candidate1.voteCount.toString(), '0',
+      'candidate 1 did not receive any extra votes');
+    assert.strictEqual(
+      candidate2.voteCount.toString(), '1',
+      'candidate 2 did not receive any extra votes');
   });
 
   it('allows a voter to cast a vote', async () => {
