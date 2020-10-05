@@ -41,7 +41,23 @@ contract('Election', function(accounts) {
   });
 
   it('disallows voting on invalid candidates', async () => {
-    // TODO specification code
+    let err;
+    try {
+      await electionInstance.vote(1234, { from: accounts[3] });
+    } catch (ex) {
+      err = ex;
+    }
+    assert(err, 'expected transaction to revert');
+    assert(err.message.indexOf('revert') >= 0,
+      'error message must contain revert');
+    const candidate1 = await electionInstance.candidates(1);
+    const candidate2 = await electionInstance.candidates(2);
+    assert.strictEqual(
+      candidate1.voteCount.toString(), '0',
+      'candidate 1 did not receive any votes');
+    assert.strictEqual(
+      candidate2.voteCount.toString(), '0',
+      'candidate 2 did not receive any votes');
   });
 
   it('disallows double voting', async () => {
