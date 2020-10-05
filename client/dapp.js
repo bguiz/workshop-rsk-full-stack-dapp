@@ -69,7 +69,23 @@ const DApp = {
   },
 
   initContract: async function() {
-    // TODO implementation code
+    let networkId = await DApp.web3.eth.net.getId();
+    console.log('networkId', networkId);
+
+    let deployedNetwork = electionArtefact.networks[networkId];
+    if (!deployedNetwork) {
+      console.error('No contract deployed on the network that you are connected. Please switch networks.');
+      return;
+    }
+    console.log('deployedNetwork', deployedNetwork);
+
+    DApp.contracts.Election = new DApp.web3.eth.Contract(
+      electionArtefact.abi,
+      deployedNetwork.address,
+    );
+    console.log('Election', DApp.contracts.Election);
+
+    return DApp.render();
   },
 
   render: async function() {
