@@ -31,12 +31,19 @@ contract Election {
     function vote (
         uint _candidateId
     ) public {
-        // TODO check that account hasn't voted before
-        // and that candidate is valid
+        // require that they haven't voted before
+        require(
+            !voters[msg.sender]);
+
+        // require a valid candidate
         require(
             _candidateId > 0 &&
             _candidateId <= candidatesCount);
 
-        // TODO record that voter has voted
+        // record that voter has voted
+        voters[msg.sender] = true;
+
+        // update candidate vote Count
+        candidates[_candidateId].voteCount++;
     }
 }
