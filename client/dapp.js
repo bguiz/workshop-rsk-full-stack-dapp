@@ -60,7 +60,12 @@ const DApp = {
   },
 
   updateAccounts: async function(accounts) {
-    // TODO implementation code
+    const firstUpdate = !(DApp.accounts && DApp.accounts[0]);
+    DApp.accounts = accounts || await DApp.web3.eth.getAccounts();
+    console.log('updateAccounts', accounts[0]);
+    if (!firstUpdate) {
+      DApp.render();
+    }
   },
 
   initContract: async function() {
