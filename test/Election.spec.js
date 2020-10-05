@@ -18,7 +18,26 @@ contract('Election', function(accounts) {
   });
 
   it('it initializes the candidates with the correct values', async () => {
-    // TODO specification code
+    const candidate1 = await electionInstance.candidates(1);
+    assert.strictEqual(
+      candidate1.id.toString(), '1',
+      'contains the correct id');
+    assert.strictEqual(
+      candidate1.name, 'Carrot',
+      'contains the correct name');
+    assert.strictEqual(
+      candidate1.voteCount.toString(), '0',
+      'contains the correct votes count');
+    const candidate2 = await electionInstance.candidates(2);
+    assert.strictEqual(
+      candidate2.id.toString(), '2',
+      'contains the correct id');
+    assert.strictEqual(
+      candidate2.name, 'Potato',
+      'contains the correct name');
+    assert.strictEqual(
+      candidate2.voteCount.toString(), '0',
+      'contains the correct votes count');
   });
 
   it('disallows voting on invalid candidates', async () => {
