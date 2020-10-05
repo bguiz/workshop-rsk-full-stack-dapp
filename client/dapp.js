@@ -106,7 +106,52 @@ const DApp = {
   },
 
   renderVotes: async function() {
-    // TODO implementation code
+    const electionInstance = DApp.contracts.Election;
+
+    // Load contract data
+    const candidatesCount = await electionInstance.methods.candidatesCount().call();
+    const getCandidatePromises = [];
+    for (let idx = 1; idx <= candidatesCount; ++idx) {
+      getCandidatePromises.push(
+        electionInstance.methods.candidates(idx).call(),
+      );
+    }
+    const candidates = (await Promise.all(getCandidatePromises))
+      .map(
+        ({ id, name, voteCount }) => ({ id, name, voteCount }),
+      );
+    console.log(candidates);
+
+    // Render live results
+    utils.elHide(loader);
+    utils.elShow(content);
+    let candidateResultsHtml = '';
+    let candidateSelectHtml = '';
+    candidates.forEach((candidate) => {
+      const { id, name, voteCount } = candidate;
+      candidateResultsHtml +=
+        `<tr><td>${id}</td><td>${name}</td><td>${voteCount}</td></tr>`;
+      candidateSelectHtml +=
+        `<option value="${id}">${name}</option>`;
+    });
+    const candidatesSelectEl =
+      document.querySelector('#candidatesSelect');
+    candidatesSelectEl.innerHTML = candidateSelectHtml;
+    const candidateResultsEl =
+      document.querySelector('#candidatesResults');
+    candidateResultsEl.innerHTML = candidateResultsHtml;
+
+    // Determine whether to display ballot to this account
+    const currentAccountHasVoted =
+      await electionInstance.methods
+        .voters(DApp.accounts[0]).call();
+    console.log('currentAccountHasVoted', currentAccountHasVoted);
+    const ballotEl = document.querySelector('#ballot');
+    if (currentAccountHasVoted) {
+      utils.elHide(ballotEl);
+    } else {
+      utils.elShow(ballotEl);
+    }
   },
 
   onVoteSubmitClick: async function(ev) {
