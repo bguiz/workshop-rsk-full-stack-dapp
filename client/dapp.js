@@ -89,7 +89,20 @@ const DApp = {
   },
 
   render: async function() {
-    // TODO implementation code
+    const loader = document.querySelector('#loader');
+    const content = document.querySelector('#content');
+    utils.elShow(loader);
+    utils.elHide(content);
+
+    const voteEl = document.querySelector('#vote');
+    voteEl.removeEventListener('click', DApp.onVoteSubmitClick);
+    voteEl.addEventListener('click', DApp.onVoteSubmitClick);
+
+    // Load account data
+    document.querySelector('#account').textContent =
+      `Your account ${ DApp.accounts[0] }`;
+
+    return DApp.renderVotes();
   },
 
   renderVotes: async function() {
