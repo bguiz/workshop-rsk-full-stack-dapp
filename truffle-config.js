@@ -41,53 +41,72 @@ if (typeof gasPriceMainnet !== 'number' || isNaN(gasPriceMainnet)) {
 module.exports = {
   networks: {
     regtest: {
+      // Use default provider, Regtest starts with unlocked accounts
       host: '127.0.0.1',
       port: 4444,
       network_id: 33,
       networkCheckTimeout: 1e3,
     },
     testnet: {
-      provider: () => new HDWalletProvider(
-        testnetSeedPhrase,
-        'https://public-node.testnet.rsk.co/2.0.1/',
-      ),
+      provider: () => new HDWalletProvider({
+        mnemonic: {
+          phrase: testnetSeedPhrase,
+        },
+        providerOrUrl: 'https://public-node.testnet.rsk.co/2.0.1/',
+        // Higher polling interval to check for blocks less frequently
+        pollingInterval: 10e3,
+      }),
       // Ref: http://developers.rsk.co/rsk/architecture/account-based/#chainid
       network_id: 31,
-      gasPrice: Math.floor(gasPriceMainnet * TESTNET_GAS_MULT),
+      gasPrice: Math.floor(gasPriceTestnet * TESTNET_GAS_MULT),
       networkCheckTimeout: 1e6,
+      timeoutBlocks: 100,
     },
     localtestnet: {
-      provider: () => new HDWalletProvider(
-        mnemonic,
-        'http://localhost:7777/',
-      ),
+      provider: () => new HDWalletProvider({
+        mnemonic: {
+          phrase: testnetSeedPhrase,
+        },
+        providerOrUrl: 'http://localhost:7777/',
+        // Default polling interval when running your own node
+      }),
       network_id: 31,
       gasPrice: Math.floor(gasPriceTestnet * TESTNET_GAS_MULT),
       networkCheckTimeout: 10e3,
+      timeoutBlocks: 100,
     },
     mainnet: {
       // NOTE that this configuration is a template.
       // You should modify it according to your needs and security requirements.
-      provider: () => new HDWalletProvider(
-        mainnetSeedPhrase,
-        'https://public-node.rsk.co/2.0.1/',
-      ),
+      provider: () => new HDWalletProvider({
+        mnemonic: {
+          phrase: mainnetSeedPhrase,
+        },
+        providerOrUrl: 'https://public-node.rsk.co/2.0.1/',
+        // Higher polling interval to check for blocks less frequently
+        pollingInterval: 10e3,
+      }),
       // Ref: http://developers.rsk.co/rsk/architecture/account-based/#chainid
       network_id: 30,
       gasPrice: Math.floor(gasPriceMainnet * MAINNET_GAS_MULT),
-      networkCheckTimeout: 1e6,
+      networkCheckTimeout: 10e3,
+      timeoutBlocks: 100,
     },
     localmainnet: {
       // NOTE that this configuration is a template.
       // You should modify it according to your needs and security requirements.
-      provider: () => new HDWalletProvider(
-        mainnetSeedPhrase,
-        'http://localhost:8888/',
-      ),
+      provider: () => new HDWalletProvider({
+        mnemonic: {
+          phrase: mainnetSeedPhrase,
+        },
+        providerOrUrl: 'http://localhost:8888/',
+        // Default polling interval when running your own node
+      }),
       // Ref: http://developers.rsk.co/rsk/architecture/account-based/#chainid
       network_id: 30,
       gasPrice: Math.floor(gasPriceMainnet * MAINNET_GAS_MULT),
-      networkCheckTimeout: 1e6,
+      networkCheckTimeout: 10e3,
+      timeoutBlocks: 100,
     },
   },
   compilers: {
