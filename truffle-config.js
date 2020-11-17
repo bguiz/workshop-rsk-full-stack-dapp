@@ -54,13 +54,16 @@ module.exports = {
         },
         providerOrUrl: 'https://public-node.testnet.rsk.co/2.0.1/',
         // Higher polling interval to check for blocks less frequently
-        pollingInterval: 10e3,
+        pollingInterval: 15e3,
       }),
       // Ref: http://developers.rsk.co/rsk/architecture/account-based/#chainid
       network_id: 31,
       gasPrice: Math.floor(gasPriceTestnet * TESTNET_GAS_MULT),
       networkCheckTimeout: 1e6,
       timeoutBlocks: 100,
+      // Higher polling interval to check for blocks less frequently
+      // during deployment
+      deploymentPollingInterval: 15e3,
     },
     localtestnet: {
       provider: () => new HDWalletProvider({
@@ -84,13 +87,16 @@ module.exports = {
         },
         providerOrUrl: 'https://public-node.rsk.co/2.0.1/',
         // Higher polling interval to check for blocks less frequently
-        pollingInterval: 10e3,
+        pollingInterval: 15e3,
       }),
       // Ref: http://developers.rsk.co/rsk/architecture/account-based/#chainid
       network_id: 30,
       gasPrice: Math.floor(gasPriceMainnet * MAINNET_GAS_MULT),
       networkCheckTimeout: 10e3,
       timeoutBlocks: 100,
+      // Higher polling interval to check for blocks less frequently
+      // during deployment
+      deploymentPollingInterval: 15e3,
     },
     localmainnet: {
       // NOTE that this configuration is a template.
