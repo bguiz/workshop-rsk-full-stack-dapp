@@ -52,7 +52,7 @@ module.exports = {
         mnemonic: {
           phrase: testnetSeedPhrase,
         },
-        providerOrUrl: 'https://public-node.testnet.rsk.co/2.0.1/',
+        providerOrUrl: 'https://public-node.testnet.rsk.co/',
         // Higher polling interval to check for blocks less frequently
         pollingInterval: 15e3,
       }),
